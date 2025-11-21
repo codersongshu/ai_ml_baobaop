@@ -92,13 +92,19 @@ for doc, meta in zip(res["documents"][0], res["metadatas"][0]):
 
 from huggingface_hub import InferenceClient
 
-client = InferenceClient(model="meta-llama/Llama-3.1-8B-Instruct", token="")
+def load_secrets(path="secrets.txt"):
+    secrets = {}
+    with open(path, "r") as f:
+        for line in f:
+            if "=" in line:
+                key, value = line.strip().split("=", 1)
+                secrets[key] = value.strip().strip('"').strip("'")
+    return secrets
 
-# question = "What are different tax credits?"
-# context = """
-# Tax credits reduce the amount of tax owed. Common types include child tax credit, earned income tax credit, education credits,
-# and energy efficiency credits for homeowners.
-# """
+secrets = load_secrets()
+HF_TOKEN = secrets.get("HF_TOKEN")
+
+client = InferenceClient(model="meta-llama/Llama-3.1-8B-Instruct", token=HF_TOKEN)
 
 context = txt
 
