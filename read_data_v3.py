@@ -34,7 +34,6 @@ chunks = text_splitter.split_text(clean(text))
 
 from sentence_transformers import SentenceTransformer
 
-# embedder = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 embedder = SentenceTransformer('sentence-transformers/all-MiniLM-L12-v2')
 chunk_embeddings = embedder.encode(chunks, batch_size=16, show_progress_bar=True)
 
@@ -71,7 +70,7 @@ coll.upsert(
 print(f"Indexed {len(chunks)} chunks into Chroma at ./chroma")
 
 # 5) Example: query the DB with a user question
-question = "What do I need to buy for babyr"
+question = "What are pain interventions?"
 q_vec = embedder.encode([question], normalize_embeddings=True).astype(np.float32)  # single (1, 384)
 
 res = coll.query(
