@@ -160,9 +160,21 @@ for doc, meta in zip(res["documents"][0], res["metadatas"][0]):
 # response = client.text_generation(prompt, max_new_tokens=200, temperature=0.3)
 # print(response)
 
+def load_secrets(path="secrets.txt"):
+    secrets = {}
+    with open(path, "r") as f:
+        for line in f:
+            if "=" in line:
+                key, value = line.strip().split("=", 1)
+                secrets[key] = value.strip().strip('"').strip("'")
+    return secrets
+
+secrets = load_secrets()
+HF_TOKEN = secrets.get("HF_TOKEN")
+
 from huggingface_hub import InferenceClient
 
-client = InferenceClient(model="meta-llama/Llama-3.1-8B-Instruct", token="")
+client = InferenceClient(model="meta-llama/Llama-3.1-8B-Instruct", token=HF_TOKEN)
 
 # question = "What are different tax credits?"
 # context = """
